@@ -12,7 +12,7 @@ Inside every member folder:
 | # | Folder | Module |
 |---|---|---|
 | 1 | `QuickBite-Mithulan*` | Customer & Account Management (+ the single sign-in page + admin accounts) |
-| 2 | `QuickBite-Vidhudhan-*` | Restaurant Management |
+| 2 | `QuickBite-Vidhushan-*` | Restaurant Management |
 | 3 | `QuickBite-Razan-*` | Menu & Food Item Management |
 | 4 | `QuickBite-Asjadh Ali-*` | Cart & Checkout |
 | 5 | `QuickBite-Yaasir*` | Order Management & Delivery Workflow |
