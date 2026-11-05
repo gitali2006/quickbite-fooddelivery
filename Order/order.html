@@ -1,0 +1,460 @@
+## PART B — FRONTEND (HTML templates)
+
+### `src/main/resources/templates/orders/list.html`
+```html
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>QuickBite - Orders (Member 5)</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div th:replace="~{fragments/layout :: nav}"></div>
+
+<main class="container">
+    <div class="page-head">
+        <div>
+            <h1>All orders</h1>
+            <p class="muted">Member 5 &mdash; full CRUD for orders + status workflow and driver assignment.</p>
+        </div>
+        <a th:href="@{/orders/new}" class="btn">+ Create order directly</a>
+    </div>
+
+    <form class="filter-form" th:action="@{/orders}" method="get">
+        <div class="form-group">
+            <label for="status">Filter by status</label>
+            <select id="status" name="status">
+                <option value="">All statuses</option>
+                <option th:each="s : ${statuses}" th:value="${s}" th:text="${s.label}"
+                        th:selected="${selectedStatus != null and selectedStatus == s}">Status</option>
+            </select>
+        </div>
+        <button type="submit" class="btn btn-slate">Apply filter</button>
+        <a th:href="@{/orders}" class="btn btn-outline">Reset</a>
+    </form>
+
+    <div class="card empty" th:if="${#lists.isEmpty(orders)}">
+        <span class="big">&#128203;</span>
+        No orders to show.
+    </div>
+
+    <div class="table-wrap" th:unless="${#lists.isEmpty(orders)}">
+        <table class="table">
+            <thead>
+            <tr>
+                <th>Order</th>
+                <th>Customer</th>
+                <th>Restaurant</th>
+                <th>Items</th>
+                <th>Total (Rs.)</th>
+                <th>Status</th>
+                <th>Driver</th>
+                <th>Placed at</th>
+                <th>Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="order : ${orders}">
+                <td><strong th:text="${order.orderNumber}">ORD-1</strong></td>
+                <td th:text="${order.customer.name}">Customer</td>
+                <td th:text="${order.restaurant.name}">Restaurant</td>
+                <td th:text="${order.itemCount}">0</td>
+                <td th:text="${#numbers.formatDecimal(order.totalAmount, 1, 'COMMA', 2, 'POINT')}">0.00</td>
+                <td><span class="badge" th:classappend="${order.status.cssClass}" th:text="${order.status.label}">Status</span></td>
+                <td th:text="${order.driver != null ? order.driver.name : '-'}">-</td>
+                <td th:text="${order.placedAt != null ? #temporals.format(order.placedAt, 'dd MMM, HH:mm') : '-'}">-</td>
+                <td>
+                    <div class="actions">
+                        <a th:href="@{/orders/{id}(id=${order.id})}" class="btn btn-sm btn-outline">View</a>
+                        <a th:href="@{/orders/{id}/edit(id=${order.id})}" class="btn btn-sm btn-slate">Edit</a>
+                        <form th:action="@{/orders/{id}/delete(id=${order.id})}" method="post" class="inline-form"
+                              >
+                            <button type="submit" class="btn btn-sm btn-danger">Delete</button>
+                        </form>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</main>
+
+<div th:replace="~{fragments/layout :: footer}"></div>
+</body>
+</html>
+
+```
+
+### `src/main/resources/templates/orders/form.html`
+```html
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>QuickBite - New order (Member 5)</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div th:replace="~{fragments/layout :: nav}"></div>
+
+<main class="container">
+    <div class="page-head">
+        <div>
+            <h1>Create an order directly</h1>
+            <p class="muted">Member 5 &mdash; CREATE. (Customers normally order through the cart; this page is for phone orders taken by staff.)</p>
+        </div>
+        <a th:href="@{/orders}" class="btn btn-outline">&larr; Back to orders</a>
+    </div>
+
+    <div class="card">
+        <form th:action="@{/orders}" method="post">
+            <div class="form-grid">
+                <div class="form-group">
+                    <label for="customerId">Customer *</label>
+                    <select id="customerId" name="customerId" required>
+                        <option value="">-- select customer --</option>
+                        <option th:each="c : ${customers}" th:value="${c.id}"
+                                th:text="${c.name} + ' (' + ${c.email} + ')'">Customer</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="restaurantId">Restaurant *</label>
+                    <select id="restaurantId" name="restaurantId" required>
+                        <option value="">-- select restaurant --</option>
+                        <option th:each="r : ${restaurants}" th:value="${r.id}" th:text="${r.name}">Restaurant</option>
+                    </select>
+                </div>
+                <div class="form-group full">
+                    <label for="menuItemId">Dish * <span class="muted">(must belong to the selected restaurant)</span></label>
+                    <select id="menuItemId" name="menuItemId" required>
+                        <option value="">-- select dish --</option>
+                        <option th:each="item : ${menuItems}" th:value="${item.id}"
+                                th:text="${item.name} + '  |  ' + ${item.restaurant.name} + '  |  Rs. ' + ${item.price}">Dish</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="quantity">Quantity</label>
+                    <input type="number" id="quantity" name="quantity" value="1" min="1">
+                </div>
+                <div class="form-group">
+                    <label for="deliveryAddress">Delivery address *</label>
+                    <input type="text" id="deliveryAddress" name="deliveryAddress" required placeholder="House number, street, city">
+                </div>
+                <div class="form-group full">
+                    <label for="notes">Notes</label>
+                    <input type="text" id="notes" name="notes" placeholder="Optional instructions">
+                </div>
+            </div>
+            <div class="form-actions">
+                <button type="submit" class="btn">Create order</button>
+                <a th:href="@{/orders}" class="btn btn-outline">Cancel</a>
+            </div>
+        </form>
+    </div>
+</main>
+
+<div th:replace="~{fragments/layout :: footer}"></div>
+</body>
+</html>
+
+```
+
+### `src/main/resources/templates/orders/form-edit.html`
+```html
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="'QuickBite - Edit ' + ${order.orderNumber}">Edit order</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div th:replace="~{fragments/layout :: nav}"></div>
+
+<main class="container">
+    <div class="page-head">
+        <div>
+            <h1 th:text="'Edit order ' + ${order.orderNumber}">Edit order</h1>
+            <p class="muted">Member 5 &mdash; UPDATE form (delivery details and status)</p>
+        </div>
+        <a th:href="@{/orders/{id}(id=${order.id})}" class="btn btn-outline">&larr; Back to order</a>
+    </div>
+
+    <div class="card">
+        <dl class="kv mb">
+            <dt>Customer</dt>
+            <dd th:text="${order.customer.name}">Customer</dd>
+            <dt>Restaurant</dt>
+            <dd th:text="${order.restaurant.name}">Restaurant</dd>
+            <dt>Items</dt>
+            <dd th:text="${order.itemCount} + ' item line(s)'">0</dd>
+            <dt>Total</dt>
+            <dd th:text="'Rs. ' + ${#numbers.formatDecimal(order.totalAmount, 1, 'COMMA', 2, 'POINT')}">Rs. 0.00</dd>
+        </dl>
+
+        <form th:action="@{/orders/{id}(id=${order.id})}" method="post">
+            <div class="form-grid">
+                <div class="form-group full">
+                    <label for="deliveryAddress">Delivery address</label>
+                    <input type="text" id="deliveryAddress" name="deliveryAddress" th:value="${order.deliveryAddress}" required>
+                </div>
+                <div class="form-group full">
+                    <label for="notes">Notes</label>
+                    <input type="text" id="notes" name="notes" th:value="${order.notes}">
+                </div>
+                <div class="form-group">
+                    <label for="status">Order status</label>
+                    <select id="status" name="status">
+                        <option th:each="s : ${statuses}" th:value="${s}" th:text="${s.label}"
+                                th:selected="${order.status == s}">Status</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-actions">
+                <button type="submit" class="btn">Save changes</button>
+                <a th:href="@{/orders/{id}(id=${order.id})}" class="btn btn-outline">Cancel</a>
+            </div>
+        </form>
+    </div>
+</main>
+
+<div th:replace="~{fragments/layout :: footer}"></div>
+</body>
+</html>
+
+```
+
+### `src/main/resources/templates/orders/view.html`
+```html
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="'QuickBite - ' + ${order.orderNumber}">Order</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div th:replace="~{fragments/layout :: nav}"></div>
+
+<main class="container">
+    <div class="page-head">
+        <div>
+            <h1 th:text="'Order ' + ${order.orderNumber}">Order</h1>
+            <p class="muted">Member 5 &mdash; order details, status workflow, driver assignment, payment link.</p>
+        </div>
+        <div class="btn-row">
+            <a th:href="@{/orders}" class="btn btn-outline">&larr; All orders</a>
+            <a th:href="@{/orders/{id}/edit(id=${order.id})}" class="btn btn-slate">Edit</a>
+            <a th:href="@{/orders/my}" class="btn">My orders</a>
+        </div>
+    </div>
+
+    <div class="stats-grid">
+        <div class="stat-card accent-blue">
+            <div class="stat-label">Status</div>
+            <span class="badge" th:classappend="${order.status.cssClass}" th:text="${order.status.label}">Status</span>
+        </div>
+        <div class="stat-card accent-green">
+            <div class="stat-label">Total</div>
+            <div class="stat-value" th:text="'Rs. ' + ${#numbers.formatDecimal(order.totalAmount, 1, 'COMMA', 2, 'POINT')}">Rs. 0</div>
+        </div>
+        <div class="stat-card accent-amber">
+            <div class="stat-label">Placed at</div>
+            <div style="font-weight:700;"
+                 th:text="${order.placedAt != null ? #temporals.format(order.placedAt, 'dd MMM yyyy, HH:mm') : '-'}">-</div>
+        </div>
+        <div class="stat-card accent-orange">
+            <div class="stat-label">Delivered at</div>
+            <div style="font-weight:700;"
+                 th:text="${order.deliveredAt != null ? #temporals.format(order.deliveredAt, 'dd MMM yyyy, HH:mm') : '-'}">-</div>
+        </div>
+    </div>
+
+    <div class="card-grid">
+        <div class="card">
+            <h3>Customer</h3>
+            <p><a th:href="@{/customers/{id}(id=${order.customer.id})}" th:text="${order.customer.name}">Customer</a></p>
+            <p class="muted" th:text="${order.customer.phone} ?: 'No phone'">Phone</p>
+            <p class="muted" th:text="${order.deliveryAddress} ?: 'No address'">Address</p>
+            <p class="muted" th:if="${order.notes}" th:text="'Note: ' + ${order.notes}">Note</p>
+        </div>
+        <div class="card">
+            <h3>Restaurant</h3>
+            <p><a th:href="@{/restaurants/{id}(id=${order.restaurant.id})}" th:text="${order.restaurant.name}">Restaurant</a></p>
+            <p class="muted" th:text="${order.restaurant.address} ?: ''">Address</p>
+        </div>
+        <div class="card">
+            <h3>Delivery driver</h3>
+            <p th:if="${order.driver != null}">
+                <a th:href="@{/drivers/{id}(id=${order.driver.id})}" th:text="${order.driver.name}">Driver</a>
+                <span class="muted" th:text="'(' + ${order.driver.vehicleType} + ')'">(Bike)</span>
+            </p>
+            <p class="muted" th:if="${order.driver == null}">No driver assigned yet.</p>
+
+            <form th:if="${order.active}" th:action="@{/orders/{id}/assign-driver(id=${order.id})}" method="post">
+                <div class="form-group mb">
+                    <label for="driverId">Assign an available driver</label>
+                    <select id="driverId" name="driverId" required>
+                        <option value="">-- select driver --</option>
+                        <option th:each="d : ${drivers}" th:value="${d.id}"
+                                th:text="${d.name} + ' (' + ${d.vehicleType} + ')'">Driver</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-sm btn-orange">Assign driver</button>
+            </form>
+        </div>
+        <div class="card">
+            <h3>Payment</h3>
+            <div th:if="${payment != null}">
+                <p>Ref: <strong th:text="${payment.transactionRef}">TXN</strong></p>
+                <p>Method: <span th:text="${payment.method.label}">Method</span></p>
+                <p>Status: <span class="badge" th:classappend="${payment.status.cssClass}"
+                                th:text="${payment.status.label}">Status</span></p>
+                <div class="btn-row">
+                    <a th:href="@{/payments/{id}(id=${payment.id})}" class="btn btn-sm btn-outline">Payment details</a>
+                    <form th:if="${payment.status.name() == 'PENDING'}"
+                          th:action="@{/payments/{id}/pay(id=${payment.id})}" method="post" class="inline-form">
+                        <button type="submit" class="btn btn-sm">Mark as paid</button>
+                    </form>
+                </div>
+            </div>
+            <div th:if="${payment == null}">
+                <p class="muted">No payment record for this order yet.</p>
+                <a th:href="@{/payments/new}" class="btn btn-sm">Create payment</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="section-title"><h2>Items</h2></div>
+    <div class="table-wrap">
+        <table class="table">
+            <thead>
+            <tr>
+                <th>Dish</th>
+                <th>Unit price (Rs.)</th>
+                <th>Qty</th>
+                <th>Line total (Rs.)</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="item : ${order.items}">
+                <td th:text="${item.menuItem.name}">Dish</td>
+                <td th:text="${#numbers.formatDecimal(item.unitPrice, 1, 'COMMA', 2, 'POINT')}">0.00</td>
+                <td th:text="${item.quantity}">1</td>
+                <td th:text="${#numbers.formatDecimal(item.lineTotal, 1, 'COMMA', 2, 'POINT')}">0.00</td>
+            </tr>
+            <tr>
+                <td colspan="3" style="text-align:right;font-weight:700;">Order total</td>
+                <td style="font-weight:800;color:var(--green-dark);"
+                    th:text="${#numbers.formatDecimal(order.totalAmount, 1, 'COMMA', 2, 'POINT')}">0.00</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="card mt">
+        <h3>Update status</h3>
+        <div class="btn-row" style="align-items:flex-end;">
+            <form th:action="@{/orders/{id}/status(id=${order.id})}" method="post" class="filter-form" style="margin:0;">
+                <div class="form-group">
+                    <select name="status">
+                        <option th:each="s : ${statuses}" th:value="${s}" th:text="${s.label}"
+                                th:selected="${order.status == s}">Status</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-slate">Change status</button>
+            </form>
+            <form th:if="${order.active}" th:action="@{/orders/{id}/cancel(id=${order.id})}" method="post" class="inline-form"
+                  >
+                <button type="submit" class="btn btn-amber">Cancel order</button>
+            </form>
+            <form th:action="@{/orders/{id}/delete(id=${order.id})}" method="post" class="inline-form"
+                  >
+                <button type="submit" class="btn btn-danger">Delete order</button>
+            </form>
+        </div>
+        <p class="muted" style="font-size:.85rem;margin-top:10px;">
+            Tip: when the status becomes <strong>Delivered</strong>, the driver is automatically freed
+            and the customer receives 10 loyalty points.
+        </p>
+    </div>
+</main>
+
+<div th:replace="~{fragments/layout :: footer}"></div>
+</body>
+</html>
+
+```
+
+### `src/main/resources/templates/orders/my-orders.html`
+```html
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>QuickBite - My orders</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div th:replace="~{fragments/layout :: nav}"></div>
+
+<main class="container">
+    <div class="page-head">
+        <div>
+            <h1>My orders</h1>
+            <p class="muted" th:text="'Order history of ' + ${customer.name} + ' (' + ${customer.loyaltyPoints} + ' loyalty points)'">
+                Order history</p>
+        </div>
+        <a th:href="@{/menu}" class="btn btn-orange">Order something new</a>
+    </div>
+
+    <div class="card empty" th:if="${#lists.isEmpty(orders)}">
+        <span class="big">&#128203;</span>
+        You have not placed any orders yet.
+        <div class="btn-row" style="justify-content:center;margin-top:14px;">
+            <a th:href="@{/menu}" class="btn">Browse the menu</a>
+        </div>
+    </div>
+
+    <div class="table-wrap" th:unless="${#lists.isEmpty(orders)}">
+        <table class="table">
+            <thead>
+            <tr>
+                <th>Order</th>
+                <th>Restaurant</th>
+                <th>Items</th>
+                <th>Total (Rs.)</th>
+                <th>Status</th>
+                <th>Driver</th>
+                <th>Placed at</th>
+                <th>Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="order : ${orders}">
+                <td><strong th:text="${order.orderNumber}">ORD-1</strong></td>
+                <td th:text="${order.restaurant.name}">Restaurant</td>
+                <td th:text="${order.itemCount}">0</td>
+                <td th:text="${#numbers.formatDecimal(order.totalAmount, 1, 'COMMA', 2, 'POINT')}">0.00</td>
+                <td><span class="badge" th:classappend="${order.status.cssClass}" th:text="${order.status.label}">Status</span></td>
+                <td th:text="${order.driver != null ? order.driver.name : '-'}">-</td>
+                <td th:text="${order.placedAt != null ? #temporals.format(order.placedAt, 'dd MMM, HH:mm') : '-'}">-</td>
+                <td>
+                    <div class="actions">
+                        <a th:href="@{/orders/{id}(id=${order.id})}" class="btn btn-sm btn-outline">Track</a>
+                        <a th:if="${order.status.name() == 'DELIVERED'}"
+                           th:href="@{/reviews/new(restaurantId=${order.restaurant.id})}" class="btn btn-sm btn-amber">Review</a>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</main>
+
+<div th:replace="~{fragments/layout :: footer}"></div>
+</body>
+</html>
+
+```

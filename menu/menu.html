@@ -2,12 +2,14 @@
 
 ### `src/main/resources/templates/menu/menu.html`
 ```html-->
+
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>QuickBite - Menu</title>
-    <link rel="stylesheet" href="menu.css" th:href="@{menu4\menu.css}">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+
 </head>
 <body>
 <div th:replace="~{fragments/layout :: nav}"></div>
@@ -87,12 +89,14 @@
 
 <!--### `src/main/resources/templates/menu/manage.html`
 ```html -->
+
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>QuickBite - Manage menu (Member 3)</title>
-    <link rel="stylesheet" href="menu.css" th:href="@{menu4\menu.css}">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+
 </head>
 <body>
 <div th:replace="~{fragments/layout :: nav}"></div>
@@ -187,12 +191,14 @@
 
 <!--### `src/main/resources/templates/menu/form.html`
 ```html -->
+
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title th:text="${menuItem.id == null} ? 'QuickBite - New dish' : 'QuickBite - Edit dish'">Menu item form</title>
-    <link rel="stylesheet" href="menu.css" th:href="@{menu4\menu.css}">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+
 </head>
 <body>
 <div th:replace="~{fragments/layout :: nav}"></div>
