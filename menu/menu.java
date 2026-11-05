@@ -301,3 +301,142 @@ public class MenuItemServiceImpl implements MenuItemService {
 
 ```
 
+### `src/main/java/com/example/fooddelivery/controller/MenuItemController.java`
+```java
+package com.example.fooddelivery.controller;
+
+import com.example.fooddelivery.model.MenuItem;
+import com.example.fooddelivery.service.MenuItemService;
+import com.example.fooddelivery.service.RestaurantService;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import java.math.BigDecimal;
+
+/**
+ * MENU
+ * ----
+ * PUBLIC  (anyone):        GET  /menu            -> browse dishes grouped per restaurant
+ * ADMIN   (/admin/menu/**): full CRUD for dishes  [protected]
+ *
+ * CREATE -> GET /admin/menu/new + POST /admin/menu
+ * READ   -> GET /admin/menu (search + restaurant filter)
+ * UPDATE -> GET /admin/menu/{id}/edit + POST /admin/menu/{id}
+ * DELETE -> POST /admin/menu/{id}/delete
+ */
+@Controller
+public class MenuItemController {
+
+    private final MenuItemService menuItemService;
+    private final RestaurantService restaurantService;
+
+    public MenuItemController(MenuItemService menuItemService, RestaurantService restaurantService) {
+        this.menuItemService = menuItemService;
+        this.restaurantService = restaurantService;
+    }
+
+    // ------------------------------------------------------- PUBLIC (everyone)
+    /** /menu = open to everyone (guests see "sign in to order");
+     *  /customer/menu = the same page for a signed-in customer, with working Add-to-cart buttons. */
+    @GetMapping({"/menu", "/customer/menu"})
+    public String publicMenu(Model model) {
+        model.addAttribute("menuByRestaurant", menuItemService.groupByRestaurant());
+        return "menu/menu";
+    }
+
+    // ------------------------------------------------------- ADMIN AREA
+    @GetMapping("/admin/menu")
+    public String manage(@RequestParam(required = false) String keyword,
+                         @RequestParam(required = false) Long restaurantId,
+                         Model model) {
+        if (restaurantId != null) {
+            model.addAttribute("menuItems", menuItemService.findByRestaurant(restaurantId));
+        } else {
+            model.addAttribute("menuItems", menuItemService.search(keyword));
+        }
+        model.addAttribute("keyword", keyword);
+        model.addAttribute("restaurantId", restaurantId);
+        model.addAttribute("restaurants", restaurantService.findAll());
+        return "menu/manage";
+    }
+
+    @GetMapping("/admin/menu/new")
+    public String createForm(Model model) {
+        model.addAttribute("menuItem", new MenuItem());
+        model.addAttribute("restaurants", restaurantService.findAll());
+        return "menu/form";
+    }
+
+    @PostMapping("/admin/menu")
+    public String create(@ModelAttribute("menuItem") MenuItem menuItem,
+                         @RequestParam(required = false) Long restaurantId,
+                         RedirectAttributes redirectAttributes) {
+        if (menuItem.getName() == null || menuItem.getName().isBlank() || restaurantId == null
+                || menuItem.getPrice() == null) {
+            redirectAttributes.addFlashAttribute("error", "Name, price and restaurant are required.");
+            return "redirect:/admin/menu/new";
+        }
+        if (menuItem.getPrice().compareTo(BigDecimal.ZERO) < 0) {
+            redirectAttributes.addFlashAttribute("error", "Price cannot be negative.");
+            return "redirect:/admin/menu/new";
+        }
+        menuItem.setRestaurant(restaurantService.findById(restaurantId));
+        menuItemService.save(menuItem);
+        redirectAttributes.addFlashAttribute("success", "\"" + menuItem.getName() + "\" was added to the menu.");
+        return "redirect:/admin/menu";
+    }
+
+    @GetMapping("/admin/menu/{id}/edit")
+    public String editForm(@PathVariable Long id, Model model) {
+        model.addAttribute("menuItem", menuItemService.findById(id));
+        model.addAttribute("restaurants", restaurantService.findAll());
+        return "menu/form";
+    }
+
+    @PostMapping("/admin/menu/{id}")
+    public String update(@PathVariable Long id,
+                         @ModelAttribute("menuItem") MenuItem menuItem,
+                         @RequestParam(required = false) Long restaurantId,
+                         RedirectAttributes redirectAttributes) {
+        MenuItem existing = menuItemService.findById(id);
+        existing.setName(menuItem.getName());
+        existing.setDescription(menuItem.getDescription());
+        existing.setCategory(menuItem.getCategory());
+        existing.setPrice(menuItem.getPrice());
+        existing.setVegetarian(menuItem.isVegetarian());
+        existing.setAvailable(menuItem.isAvailable());
+        if (restaurantId != null) {
+            existing.setRestaurant(restaurantService.findById(restaurantId));
+        }
+        menuItemService.save(existing);
+        redirectAttributes.addFlashAttribute("success", "Menu item updated.");
+        return "redirect:/admin/menu";
+    }
+
+    @PostMapping("/admin/menu/{id}/delete")
+    public String delete(@PathVariable Long id, RedirectAttributes redirectAttributes) {
+        try {
+            menuItemService.deleteById(id);
+            redirectAttributes.addFlashAttribute("success", "Menu item deleted.");
+        } catch (Exception ex) {
+            redirectAttributes.addFlashAttribute("error",
+                    "This dish is used in existing orders, so it cannot be deleted. Mark it as 'sold out' instead.");
+        }
+        return "redirect:/admin/menu";
+    }
+
+    @PostMapping("/admin/menu/{id}/toggle")
+    public String toggleAvailability(@PathVariable Long id, RedirectAttributes redirectAttributes) {
+        menuItemService.toggleAvailability(id);
+        redirectAttributes.addFlashAttribute("success", "Availability changed.");
+        return "redirect:/admin/menu";
+    }
+}
+
+```
