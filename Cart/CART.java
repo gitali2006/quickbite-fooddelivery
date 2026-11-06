@@ -84,10 +84,10 @@ public class CartItem extends BaseEntity {
     }
 }
 
-```
 
-### `src/main/java/com/example/fooddelivery/repository/CartItemRepository.java`
-```java
+
+### src/main/java/com/example/fooddelivery/repository/CartItemRepository.java
+
 package com.example.fooddelivery.repository;
 
 import com.example.fooddelivery.model.CartItem;
@@ -110,10 +110,10 @@ public interface CartItemRepository extends JpaRepository<CartItem, Long> {
     long countByCustomerId(Long customerId);
 }
 
-```
 
-### `src/main/java/com/example/fooddelivery/service/CartService.java`
-```java
+
+### src/main/java/com/example/fooddelivery/service/CartService.java
+
 package com.example.fooddelivery.service;
 
 import com.example.fooddelivery.model.CartItem;
@@ -480,5 +480,3 @@ public class CustomerCartController {
         }
     }
 }
-
-```
