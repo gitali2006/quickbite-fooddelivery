@@ -20,7 +20,7 @@
         </div>
         <a th:href="@{/admin/customers/new}" class="btn">+ Add customer</a>
     </div>
-
+<!-- Allow administrators to search customers by name -->
     <form class="filter-form" th:action="@{/admin/customers}" method="get">
         <div class="form-group">
             <label for="keyword">Search by name</label>
