@@ -543,7 +543,8 @@
         </div>
         <span class="role-chip role-chip-customer">CUSTOMER AREA</span>
     </div>
-
+<!-- Display customer dashboard statistics including cart, orders, and loyalty points -->
+<div class="stats-grid">
     <div class="stats-grid">
         <div class="stat-card accent-orange">
             <div class="stat-value" th:text="${cartTotal != null ? 'Rs. ' + #numbers.formatDecimal(cartTotal, 1, 'COMMA', 2, 'POINT') : 'Rs. 0'}">Rs. 0</div>
