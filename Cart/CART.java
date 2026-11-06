@@ -87,7 +87,7 @@ public class CartItem extends BaseEntity {
 
 
 ### src/main/java/com/example/fooddelivery/repository/CartItemRepository.java
-
+/*<----------CartItemRepository is communicating with the database.---------->*/
 package com.example.fooddelivery.repository;
 
 import com.example.fooddelivery.model.CartItem;
@@ -113,7 +113,7 @@ public interface CartItemRepository extends JpaRepository<CartItem, Long> {
 
 
 ### src/main/java/com/example/fooddelivery/service/CartService.java
-
+    /*----------CartService defines the operations that the cart module should provide.----------*/
 package com.example.fooddelivery.service;
 
 import com.example.fooddelivery.model.CartItem;
@@ -152,8 +152,8 @@ public interface CartService {
 
 ```
 
-### `src/main/java/com/example/fooddelivery/service/impl/CartServiceImpl.java`
-```java
+### `src/main/java/com/example/fooddelivery/service/impl/CartServiceImpl.java
+    /*<----------CartServiceImpl implements the CartService interface---------->*/
 package com.example.fooddelivery.service.impl;
 
 import com.example.fooddelivery.common.ResourceNotFoundException;
@@ -326,8 +326,8 @@ public class CartServiceImpl implements CartService {
 
 ```
 
-### `src/main/java/com/example/fooddelivery/controller/CustomerCartController.java`
-```java
+### `src/main/java/com/example/fooddelivery/controller/CustomerCartController.java
+    /*<----------CustomerCartController handles HTTP requests from the user interface---------->*/
 package com.example.fooddelivery.controller;
 
 import com.example.fooddelivery.common.SessionHelper;
