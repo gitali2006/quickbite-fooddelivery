@@ -8,6 +8,7 @@ All pages share `src/main/resources/static/css/style.css`. For your pages the mo
    Single stylesheet used by every page (pure CSS, no frameworks, no JS).
    ========================================================================== */
 
+/* Keeping the main colors and shared styles in one place makes it easier to maintain the website. */
 :root {
     --green: #16a34a;
     --green-dark: #15803d;
