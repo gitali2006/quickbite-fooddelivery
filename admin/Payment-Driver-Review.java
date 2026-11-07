@@ -8,7 +8,7 @@
 
 ### `src/main/java/com/example/fooddelivery/model/Payment.java`
 ```java
-package com.example.fooddelivery.model;
+package com.example.fooddelivery.model; 
 
 import com.example.fooddelivery.common.BaseEntity;
 import com.example.fooddelivery.model.enums.PaymentMethod;
@@ -25,7 +25,6 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 /**
- * MEMBER 6 - PAYMENT MODULE
  * One payment per order. Status changes are done through business methods
  * (markPaid / refund) instead of setting fields directly -> ENCAPSULATION.
  */
@@ -53,7 +52,7 @@ public class Payment extends BaseEntity {
 
     public Payment() {
     }
-
+ 
     public Payment(Order order, PaymentMethod method) {
         this.order = order;
         this.amount = order.getTotalAmount();
@@ -85,7 +84,7 @@ public class Payment extends BaseEntity {
         }
         this.status = PaymentStatus.REFUNDED;
     }
-
+ 
     public void markFailed() {
         this.status = PaymentStatus.FAILED;
     }
@@ -114,7 +113,7 @@ public class Payment extends BaseEntity {
 
     public void setMethod(PaymentMethod method) {
         this.method = method;
-    }
+    } 
 
     public PaymentStatus getStatus() {
         return status;
@@ -137,7 +136,7 @@ public class Payment extends BaseEntity {
     }
 
     public void setPaidAt(LocalDateTime paidAt) {
-        this.paidAt = paidAt;
+        this.paidAt = paidAt; 
     }
 }
 
@@ -155,7 +154,6 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.Table;
 
 /**
- * MEMBER 6 - DELIVERY MODULE
  * OOP: INHERITANCE (BaseEntity -> Person -> Driver), POLYMORPHISM (getRole),
  *      ENCAPSULATION.
  */
