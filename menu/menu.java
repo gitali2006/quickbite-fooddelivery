@@ -58,6 +58,7 @@ public class MenuItem extends BaseEntity {
     }
 
     /** BUSINESS LOGIC inside the object (ENCAPSULATION): price of N portions. */
+    // Calculates the total price for the requested number of portions.
     public BigDecimal totalFor(int quantity) {
         if (quantity <= 0) {
             return BigDecimal.ZERO;
@@ -65,6 +66,7 @@ public class MenuItem extends BaseEntity {
         return price.multiply(BigDecimal.valueOf(quantity));
     }
 
+    // Returns a readable label based on whether the dish is currently available.
     public String getAvailabilityLabel() {
         return available ? "Available" : "Sold out";
     }
@@ -287,6 +289,7 @@ public class MenuItemServiceImpl implements MenuItemService {
 
     /** Groups menu items so the menu page can show one section per restaurant. */
     @Override
+    // Organizes dishes by restaurant so each restaurant can have its own menu section.
     public Map<Restaurant, List<MenuItem>> groupByRestaurant() {
         Map<Restaurant, List<MenuItem>> grouped = new LinkedHashMap<>();
         for (Restaurant restaurant : restaurantRepository.findAll()) {
@@ -374,6 +377,7 @@ public class MenuItemController {
     }
 
     @PostMapping("/admin/menu")
+    // Checks the submitted details and saves the new dish to its restaurant.
     public String create(@ModelAttribute("menuItem") MenuItem menuItem,
                          @RequestParam(required = false) Long restaurantId,
                          RedirectAttributes redirectAttributes) {
@@ -438,5 +442,3 @@ public class MenuItemController {
         return "redirect:/admin/menu";
     }
 }
-
-```
