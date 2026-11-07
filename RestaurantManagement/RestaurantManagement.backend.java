@@ -25,7 +25,7 @@ public class Restaurant extends BaseEntity {
     @Column(nullable = false)
     private String name;
 
-    private String cuisineType;     // Sri Lankan, Chinese, Italian...
+    private String cuisineType;     // Sri Lankan, Chinese, Italian
 
     private String address;
 
