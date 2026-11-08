@@ -1,6 +1,8 @@
 ## PART A — BACKEND (Java)
 
 ### `src/main/java/com/example/fooddelivery/model/Restaurant.java`
+// Represents one row in the restaurants table. It holds the restaurant’s data: name, cuisine type, address, phone, rating, open/closed status and description.
+    
 ``java
 package com.example.fooddelivery.model;
 
@@ -140,6 +142,7 @@ public class Restaurant extends BaseEntity {
 ```
 
 ### `src/main/java/com/example/fooddelivery/repository/RestaurantRepository.java`
+    //Talks to the database without you writing any SQL. By extending JpaRepository<Restaurant, Long>, you automatically get findAll(), findById(), save(), deleteById(), count() and existsById().
 ```java
 package com.example.fooddelivery.repository;
 
@@ -163,6 +166,7 @@ public interface RestaurantRepository extends JpaRepository<Restaurant, Long> {
 ```
 
 ### `src/main/java/com/example/fooddelivery/service/RestaurantService.java`
+    //Defines the contract, meaning the list of operations the Restaurant module offers: findAll, search, findOpen, findById, save, deleteById, toggleOpen and coun
 ```java
 package com.example.fooddelivery.service;
 
@@ -192,6 +196,7 @@ public interface RestaurantService {
 ```
 
 ### `src/main/java/com/example/fooddelivery/service/impl/RestaurantServiceImpl.java`
+    //Implements the interface and holds the actual rules
 ```java
 package com.example.fooddelivery.service.impl;
 
@@ -276,6 +281,7 @@ public class RestaurantServiceImpl implements RestaurantService {
 ```
 
 ### `src/main/java/com/example/fooddelivery/controller/RestaurantController.java`
+    //Handles HTTP requests under /admin/restaurants, calls the service, and returns the Thymeleaf template to display. It implements the CRUD operations
 ```java
 package com.example.fooddelivery.controller;
 
