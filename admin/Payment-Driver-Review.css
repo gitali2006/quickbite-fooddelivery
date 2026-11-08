@@ -55,7 +55,7 @@ a:hover { text-decoration: underline; }
 .mt { margin-top: 18px; }
 .mb { margin-bottom: 18px; }
 
-/* ------------------------------- navbar --------------------------------- */
+/*  navbar  */
 .navbar {
     background: linear-gradient(90deg, var(--slate) 0%, var(--slate-soft) 100%);
     color: #fff;
@@ -98,7 +98,7 @@ a:hover { text-decoration: underline; }
     margin-left: 4px;
 }
 
-/* ------------------------------- alerts --------------------------------- */
+/*  alerts  */
 .alert {
     padding: 11px 16px;
     border-radius: 10px;
@@ -110,7 +110,7 @@ a:hover { text-decoration: underline; }
 .alert-error { background: var(--red-light); color: #7f1d1d; border-color: #fca5a5; }
 .alert-info { background: var(--blue-light); color: #1e3a8a; border-color: #93c5fd; }
 
-/* ------------------------------- buttons -------------------------------- */
+/*  buttons  */
 .btn {
     display: inline-block;
     background: var(--green);
@@ -141,7 +141,7 @@ a:hover { text-decoration: underline; }
 .inline { display: inline; }
 .inline-form { display: inline; margin: 0; }
 
-/* -------------------------------- cards --------------------------------- */
+/*  cards  */
 .card {
     background: var(--card);
     border: 1px solid var(--border);
@@ -167,7 +167,7 @@ a:hover { text-decoration: underline; }
 }
 .page-head p { margin: 0; }
 
-/* ------------------------------- hero ----------------------------------- */
+/*  hero  */
 .hero {
     background: linear-gradient(120deg, var(--slate) 0%, #14532d 60%, var(--green-dark) 100%);
     color: #fff;
