@@ -1,3 +1,4 @@
+
 ## PART A — BACKEND (Java)
 
 ### `src/main/java/com/example/fooddelivery/model/MenuItem.java`
@@ -373,6 +374,7 @@ public class MenuItemController {
         return "menu/form";
     }
 
+    // Validates the dish details before saving the new menu item.
     @PostMapping("/admin/menu")
     public String create(@ModelAttribute("menuItem") MenuItem menuItem,
                          @RequestParam(required = false) Long restaurantId,
