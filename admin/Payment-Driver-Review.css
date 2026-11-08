@@ -310,13 +310,13 @@ table.table {
 }
 .filter-form .form-group { margin: 0; min-width: 200px; }
 
-/* ------------------------------- totals --------------------------------- */
+/*  totals  */
 .totals { max-width: 420px; margin-left: auto; }
 .totals .row { display: flex; justify-content: space-between; padding: 7px 0; border-bottom: 1px dashed var(--border); }
 .totals .row:last-child { border-bottom: none; font-weight: 800; font-size: 1.1rem; color: var(--slate); }
 .totals .grand { color: var(--green-dark); }
 
-/* ------------------------------ empty state ----------------------------- */
+/*  empty state  */
 .empty {
     text-align: center;
     padding: 44px 20px;
@@ -326,8 +326,7 @@ table.table {
     border-radius: var(--radius);
 }
 .empty .big { font-size: 2.4rem; display: block; margin-bottom: 8px; }
-
-/* -------------------------------- footer -------------------------------- */
+/*  footer  */
 .footer {
     background: var(--slate);
     color: #94a3b8;
@@ -338,7 +337,7 @@ table.table {
 .footer p { margin: 4px 0; }
 .footer .muted { color: #64748b; }
 
-/* ------------------------------ misc bits ------------------------------- */
+/*  misc bits  */
 .avatar {
     width: 44px;
     height: 44px;
@@ -388,7 +387,7 @@ table.table {
 .role-chip-admin { background: #fee2e2; color: #991b1b; border: 1px solid #fca5a5; }
 .role-chip-customer { background: #dcfce7; color: #166534; border: 1px solid #86efac; }
 
-/* ---------- sign-in page ---------- */
+/*  sign-in page  */
 .auth-wrap { display: flex; justify-content: center; padding: 12px 0 30px; }
 .auth-card { width: 100%; max-width: 560px; }
 .auth-split {
@@ -408,7 +407,7 @@ table.table {
 .auth-box-admin { border-left: 4px solid var(--red); }
 .auth-box-customer { border-left: 4px solid var(--green); }
 
-/* ---------- clickable shortcut cards ---------- */
+/*  clickable shortcut cards  */
 .quick-link { display: block; color: inherit; }
 .quick-link:hover {
     text-decoration: none;
@@ -421,7 +420,7 @@ table.table {
 /* little "hashed" chip */
 .hash-chip { background: #eef2ff; border-color: #c7d2fe; color: #3730a3; }
 
-/* ---------- sign-up page: required-field marker ---------- */
+/*  sign-up page: required-field marker  */
 .required { color: var(--red); font-weight: 700; }
 
 ```
