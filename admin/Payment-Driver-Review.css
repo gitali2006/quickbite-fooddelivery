@@ -179,7 +179,7 @@ a:hover { text-decoration: underline; }
 .hero h1 { color: #fff; font-size: 2rem; margin-bottom: 8px; }
 .hero p { color: #dcfce7; margin: 0 0 18px; max-width: 640px; }
 
-/* ------------------------------ stat cards ------------------------------ */
+/*  stat cards  */
 .stats-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
@@ -200,7 +200,7 @@ a:hover { text-decoration: underline; }
 .stat-card.accent-blue { border-left: 4px solid var(--blue); }
 .stat-card.accent-amber { border-left: 4px solid var(--amber); }
 
-/* -------------------------------- tables -------------------------------- */
+/*  tables  */
 .table-wrap { overflow-x: auto; }
 table.table {
     width: 100%;
@@ -225,7 +225,7 @@ table.table {
 .table tbody tr:hover { background: #f8fafc; }
 .table .actions { white-space: nowrap; display: flex; gap: 6px; flex-wrap: wrap; }
 
-/* -------------------------------- badges -------------------------------- */
+/*  badges  */
 .badge {
     display: inline-block;
     padding: 3px 10px;
@@ -258,7 +258,7 @@ table.table {
 }
 .chip-veg { background: var(--green-light); color: #166534; border-color: #86efac; }
 
-/* ------------------------------ menu cards ------------------------------ */
+/*  menu cards  */
 .dish-card { display: flex; flex-direction: column; }
 .dish-card .dish-head { display: flex; justify-content: space-between; gap: 10px; align-items: flex-start; }
 .dish-card .price { font-weight: 800; color: var(--green-dark); font-size: 1.05rem; white-space: nowrap; }
@@ -273,7 +273,7 @@ table.table {
 }
 .stars { color: #f59e0b; letter-spacing: 2px; font-size: 1rem; }
 
-/* -------------------------------- forms --------------------------------- */
+/*  forms  */
 .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px 18px; }
 .form-grid .full { grid-column: 1 / -1; }
 @media (max-width: 700px) { .form-grid { grid-template-columns: 1fr; } }
