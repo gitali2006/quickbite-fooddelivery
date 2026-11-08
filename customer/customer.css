@@ -5,7 +5,7 @@ All pages share `src/main/resources/static/css/style.css`. For your pages the mo
 ```css
 /* ==========================================================================
    QUICKBITE - Online Food Delivery System
-   Single stylesheet used by every page (pure CSS, no frameworks, no JS).
+   Single stylesheet used by every page .
    ========================================================================== */
 
 :root {
