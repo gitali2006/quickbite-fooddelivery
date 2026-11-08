@@ -1,6 +1,7 @@
 ## PART B —  FRONTEND (HTML templates)
 
 ### `src/main/resources/templates/restaurants/list.html`
+<!--The admin’s main screen. It shows all restaurants as cards and offers every action from one place.-->
 ```html
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
@@ -71,6 +72,7 @@
 ```
 
 ### `src/main/resources/templates/restaurants/form.html`
+<!--One template serves both Create and Update. It decides which mode it is in by checking restaurant.id == null.-->
 ```html
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
@@ -142,6 +144,7 @@
 ```
 
 ### `src/main/resources/templates/restaurants/view.html`
+<!--The Read (single record) screen. It shows one restaurant’s profile and the menu items that belong to it.-->
 ```html
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
