@@ -2,7 +2,7 @@
 
 All pages share `src/main/resources/static/css/style.css`. For your pages the most relevant classes are `.status-placed/confirmed/preparing/out-for-delivery/delivered/cancelled`, `.stats-grid`, `.table`. Full file below:
 
-```css
+css
 /* ==========================================================================
    QUICKBITE - Online Food Delivery System
    Single stylesheet used by every page (pure CSS, no frameworks, no JS).
