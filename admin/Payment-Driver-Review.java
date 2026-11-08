@@ -85,7 +85,7 @@ public class Payment extends BaseEntity {
         this.status = PaymentStatus.FAILED;
     }
 
-    // ---------- Getters / Setters ----------
+    //Getters / Setters 
 
     public Order getOrder() {
         return order;
@@ -192,7 +192,7 @@ public class Driver extends Person {
         return status == DriverStatus.AVAILABLE;
     }
 
-    // ---------- Getters / Setters ----------
+    //  Getters / Setters 
 
     public String getVehicleType() {
         return vehicleType;
@@ -292,7 +292,7 @@ public class Review extends BaseEntity {
         return "Negative";
     }
 
-    // ---------- Getters / Setters ----------
+    //  Getters / Setters 
 
     public Customer getCustomer() {
         return customer;
@@ -1009,7 +1009,7 @@ public class PaymentController {
         return "redirect:/admin/payments/" + id;
     }
 
-    // ---------------- business actions ----------------
+    //  business actions 
     @PostMapping("/{id}/pay")
     public String markPaid(@PathVariable Long id, RedirectAttributes redirectAttributes) {
         try {
@@ -1312,7 +1312,6 @@ import java.util.List;
 
 /**
  * CUSTOMER PAYMENT PORTAL   (Member 6)   -   /customer/payments/**
- * ------------------------------------------------------------
  * The customer's own payment pages (protected, CUSTOMER role only):
  *
  *   GET  /customer/payments          -> all my payments + how many are still pending (READ)
@@ -1335,7 +1334,7 @@ public class CustomerPaymentController {
         return SessionHelper.getUserId(session);
     }
 
-    // ---------------------------------------------------- PAYMENT PORTAL
+    //  PAYMENT PORTAL
     @GetMapping("/payments")
     public String myPayments(HttpSession session, Model model) {
         Long id = customerId(session);
@@ -1386,7 +1385,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 /**
  * MY REVIEWS   (Member 6)   -   /customer/reviews/**
- * ------------------------------------------------
  * The customer writes and manages his own reviews (protected, CUSTOMER role only):
  *
  *   GET  /customer/reviews            -> reviews I wrote (READ)
@@ -1427,7 +1425,7 @@ public class CustomerReviewController {
         return review;
     }
 
-    // -------------------------------------------------------------- REVIEWS
+    //  REVIEWS
     @GetMapping("/reviews")
     public String myReviews(HttpSession session, Model model) {
         Long id = customerId(session);
