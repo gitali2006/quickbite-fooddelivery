@@ -24,11 +24,6 @@ import jakarta.persistence.Table;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
-/**
- * MEMBER 6 - PAYMENT MODULE
- * One payment per order. Status changes are done through business methods
- * (markPaid / refund) instead of setting fields directly -> ENCAPSULATION.
- */
 @Entity
 @Table(name = "payments")
 public class Payment extends BaseEntity {
