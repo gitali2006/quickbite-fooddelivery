@@ -401,6 +401,7 @@ public class MenuItemController {
         return "menu/form";
     }
 
+    // Updates the existing dish with the latest details from the edit form.
     @PostMapping("/admin/menu/{id}")
     public String update(@PathVariable Long id,
                          @ModelAttribute("menuItem") MenuItem menuItem,
