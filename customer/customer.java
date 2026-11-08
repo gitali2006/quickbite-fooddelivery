@@ -10,6 +10,9 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
 
+// FILE PATH: src/main/java/com/example/fooddelivery/model/Customer.java
+// PURPOSE: Defines customer account data and behavior. Demonstrates inheritance, encapsulation, method overriding and constructor overloading.
+
 /**
  * CUSTOMER ACCOUNT
  * OOP: INHERITANCE (BaseEntity -> Person -> Customer), POLYMORPHISM (getRole),
@@ -125,6 +128,10 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
 
+
+// FILE PATH: src/main/java/com/example/fooddelivery/model/Admin.java
+// PURPOSE: Defines administrator account data and behavior, including login-related fields.
+
 /**
  * ADMINISTRATOR ACCOUNT  (NEW)
  * ----------------------------
@@ -218,6 +225,9 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 import java.util.Optional;
 
+// FILE PATH: src/main/java/com/example/fooddelivery/repository/CustomerRepository.java
+// PURPOSE: Provides database access for customer records, including searching and CRUD through JpaRepository.
+
 /** MEMBER 1 - data access for customers (CRUD comes free from JpaRepository). */
 @Repository
 public interface CustomerRepository extends JpaRepository<Customer, Long> {
@@ -243,6 +253,9 @@ import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 
+// FILE PATH: src/main/java/com/example/fooddelivery/repository/AdminRepository.java
+// PURPOSE: Provides database access for administrator records and email lookups.
+
 /** Data access for administrator accounts. */
 @Repository
 public interface AdminRepository extends JpaRepository<Admin, Long> {
@@ -262,6 +275,9 @@ import com.example.fooddelivery.model.Customer;
 
 import java.util.List;
 import java.util.Optional;
+
+// FILE PATH: src/main/java/com/example/fooddelivery/service/CustomerService.java
+// PURPOSE: Declares customer operations as an interface, demonstrating abstraction.
 
 /**
  * OOP CONCEPT: ABSTRACTION
@@ -308,6 +324,9 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+
+// FILE PATH: src/main/java/com/example/fooddelivery/service/impl/CustomerServiceImpl.java
+// PURPOSE: Implements customer business logic, including registration, BCrypt password hashing, login, updates and deletion.
 
 /**
  * Business logic for the Customer module.
@@ -439,6 +458,9 @@ import com.example.fooddelivery.model.Admin;
 import java.util.List;
 import java.util.Optional;
 
+// FILE PATH: src/main/java/com/example/fooddelivery/service/AdminService.java
+// PURPOSE: Declares administrator account operations using an interface.
+
 /**
  * Business layer for administrator accounts.
  * All passwords are hashed with BCrypt before they touch the database.
@@ -480,6 +502,9 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+
+// FILE PATH: src/main/java/com/example/fooddelivery/service/impl/AdminServiceImpl.java
+// PURPOSE: Implements administrator business logic, validation and secure password handling.
 
 /**
  * SECURITY + BUSINESS RULES for admin accounts.
@@ -608,6 +633,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+// FILE PATH: src/main/java/com/example/fooddelivery/controller/CustomerController.java
+// PURPOSE: Handles HTTP requests for customer management pages and customer CRUD operations.
+
 /**
  * ADMIN AREA - CUSTOMER MANAGEMENT  (/admin/customers)
  * Full CRUD over customer accounts. New passwords are BCrypt-hashed by the service.
@@ -727,6 +755,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+// FILE PATH: src/main/java/com/example/fooddelivery/controller/AdminAccountController.java
+// PURPOSE: Handles administrator-facing account management requests.
+
 /**
  * ADMIN ACCOUNT MANAGEMENT  (/admin/admins)
  * -----------------------------------------
@@ -845,6 +876,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.Optional;
+
+// FILE PATH: src/main/java/com/example/fooddelivery/controller/AuthController.java
+// PURPOSE: Handles registration, sign-in, sign-out and user sessions.
 
 /**
  * SINGLE SIGN-IN PAGE FOR BOTH ROLES  +  CUSTOMER SIGN-UP
@@ -1000,6 +1034,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
+
+// FILE PATH: src/main/java/com/example/fooddelivery/controller/CustomerPortalController.java
+// PURPOSE: Handles the customer dashboard, profile and other customer portal requests.
 
 /**
  * CUSTOMER AREA - MY ACCOUNT   (Member 1)
