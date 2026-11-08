@@ -1,11 +1,7 @@
-## PART C — CSS (shared stylesheet)
-
-All pages share `src/main/resources/static/css/style.css`. For your pages the most relevant classes are `.status-pending/paid/failed/refunded/available/on-delivery/offline`, `.kv`, `.table`. Full file below:
-
 ```css
 /* ==========================================================================
    QUICKBITE - Online Food Delivery System
-   Single stylesheet used by every page (pure CSS, no frameworks, no JS).
+   Single stylesheet used by every page.
    ========================================================================== */
 
 :root {
