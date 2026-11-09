@@ -7,7 +7,7 @@
 ## PART A — BACKEND (Java)
 
 ### `src/main/java/com/example/fooddelivery/model/Order.java`
-```java
+
 package com.example.fooddelivery.model;
 
 import com.example.fooddelivery.common.BaseEntity;
@@ -216,8 +216,9 @@ public class Order extends BaseEntity {
 
 
 
-### `src/main/java/com/example/fooddelivery/model/OrderItem.java`
-```java
+### src/main/java/com/example/fooddelivery/model/OrderItem.java
+    /*Maps to the order_items database table*/
+
 package com.example.fooddelivery.model;
 
 import com.example.fooddelivery.common.BaseEntity;
