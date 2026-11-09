@@ -1,3 +1,4 @@
+
 ## PART A — BACKEND (Java)
 
 ### `src/main/java/com/example/fooddelivery/model/MenuItem.java`
@@ -42,9 +43,11 @@ public class MenuItem extends BaseEntity {
     @JoinColumn(name = "restaurant_id", nullable = false)
     private Restaurant restaurant;
 
+    // Required by JPA when it creates MenuItem objects from database records.
     public MenuItem() {
     }
 
+    // Creates a menu item with its main details when we already have the restaurant.
     public MenuItem(String name, String category, BigDecimal price, Restaurant restaurant) {
         this.name = name;
         this.category = category;
@@ -52,6 +55,7 @@ public class MenuItem extends BaseEntity {
         this.restaurant = restaurant;
     }
 
+    // Supplies the name that the inherited BaseEntity display method expects.
     @Override
     public String getDisplayName() {
         return name;
@@ -71,6 +75,7 @@ public class MenuItem extends BaseEntity {
         return available ? "Available" : "Sold out";
     }
 
+    // Getters allow other classes to read these private fields; setters update them when needed.
     // ---------- Getters / Setters ----------
 
     public String getName() {
@@ -146,14 +151,19 @@ import java.util.List;
 @Repository
 public interface MenuItemRepository extends JpaRepository<MenuItem, Long> {
 
+    // Spring Data builds this query from the method name and returns items for one restaurant.
     List<MenuItem> findByRestaurantId(Long restaurantId);
 
+    // Returns items for that restaurant only when their available field is true.
     List<MenuItem> findByRestaurantIdAndAvailableTrue(Long restaurantId);
 
+    // Finds names containing the search text without matching letter case exactly.
     List<MenuItem> findByNameContainingIgnoreCase(String name);
 
+    // Finds items in the given category, regardless of uppercase or lowercase letters.
     List<MenuItem> findByCategoryIgnoreCase(String category);
 
+    // Counts the menu items associated with the given restaurant ID.
     long countByRestaurantId(Long restaurantId);
 }
 
@@ -170,24 +180,34 @@ import java.util.List;
 
 public interface MenuItemService {
 
+    // Returns all menu items in the system.
     List<MenuItem> findAll();
 
+    // Returns all dishes belonging to one restaurant.
     List<MenuItem> findByRestaurant(Long restaurantId);
 
+    // Returns only the dishes that customers can currently order from a restaurant.
     List<MenuItem> findAvailableByRestaurant(Long restaurantId);
 
+    // Searches menu items using a word or part of a dish name.
     List<MenuItem> search(String keyword);
 
+    // Filters menu items using their category, such as Main or Dessert.
     List<MenuItem> findByCategory(String category);
 
+    // Finds one menu item by ID, or reports that it does not exist.
     MenuItem findById(Long id);
 
+    // Saves a new menu item or stores changes to an existing one.
     MenuItem save(MenuItem menuItem);
 
+    // Removes a menu item after checking that the ID exists.
     void deleteById(Long id);
 
+    // Switches a dish between available and sold out.
     void toggleAvailability(Long id);
 
+    // Returns the total number of menu items.
     long count();
 
     /** Every dish grouped by its restaurant (used by the customer menu page). */
@@ -219,27 +239,32 @@ public class MenuItemServiceImpl implements MenuItemService {
     private final MenuItemRepository menuItemRepository;
     private final RestaurantRepository restaurantRepository;
 
+    // Constructor injection gives this service the repositories it needs to access data.
     public MenuItemServiceImpl(MenuItemRepository menuItemRepository,
                                RestaurantRepository restaurantRepository) {
         this.menuItemRepository = menuItemRepository;
         this.restaurantRepository = restaurantRepository;
     }
 
+    // Delegates to the repository to retrieve the complete menu item list.
     @Override
     public List<MenuItem> findAll() {
         return menuItemRepository.findAll();
     }
 
+    // Gets all menu items linked to the selected restaurant.
     @Override
     public List<MenuItem> findByRestaurant(Long restaurantId) {
         return menuItemRepository.findByRestaurantId(restaurantId);
     }
 
+    // Gets only available dishes for the selected restaurant.
     @Override
     public List<MenuItem> findAvailableByRestaurant(Long restaurantId) {
         return menuItemRepository.findByRestaurantIdAndAvailableTrue(restaurantId);
     }
 
+    // An empty search shows everything; otherwise, it searches by dish name.
     @Override
     public List<MenuItem> search(String keyword) {
         if (keyword == null || keyword.isBlank()) {
@@ -248,6 +273,7 @@ public class MenuItemServiceImpl implements MenuItemService {
         return menuItemRepository.findByNameContainingIgnoreCase(keyword.trim());
     }
 
+    // An empty category shows all items; otherwise, it filters by category.
     @Override
     public List<MenuItem> findByCategory(String category) {
         if (category == null || category.isBlank()) {
@@ -256,17 +282,20 @@ public class MenuItemServiceImpl implements MenuItemService {
         return menuItemRepository.findByCategoryIgnoreCase(category.trim());
     }
 
+    // Looks up the item and throws a not-found exception if the ID is invalid.
     @Override
     public MenuItem findById(Long id) {
         return menuItemRepository.findById(id)
                 .orElseThrow(() -> ResourceNotFoundException.of("Menu item", id));
     }
 
+    // Passes the item to JPA, which inserts it or updates its existing record.
     @Override
     public MenuItem save(MenuItem menuItem) {
         return menuItemRepository.save(menuItem);
     }
 
+    // Checks the ID first so a missing item produces a clear not-found error.
     @Override
     public void deleteById(Long id) {
         if (!menuItemRepository.existsById(id)) {
@@ -275,6 +304,7 @@ public class MenuItemServiceImpl implements MenuItemService {
         menuItemRepository.deleteById(id);
     }
 
+    // Loads the dish, reverses its availability flag, and saves the change.
     @Override
     public void toggleAvailability(Long id) {
         MenuItem item = findById(id);
@@ -282,6 +312,7 @@ public class MenuItemServiceImpl implements MenuItemService {
         menuItemRepository.save(item);
     }
 
+    // Uses the repository count to return the total number of menu items.
     @Override
     public long count() {
         return menuItemRepository.count();
@@ -290,6 +321,7 @@ public class MenuItemServiceImpl implements MenuItemService {
     /** Groups menu items so the menu page can show one section per restaurant. */
     @Override
     // Organizes dishes by restaurant so each restaurant can have its own menu section.
+    // Builds a map where each restaurant is a key and its menu items are the value.
     public Map<Restaurant, List<MenuItem>> groupByRestaurant() {
         Map<Restaurant, List<MenuItem>> grouped = new LinkedHashMap<>();
         for (Restaurant restaurant : restaurantRepository.findAll()) {
@@ -339,6 +371,7 @@ public class MenuItemController {
     private final MenuItemService menuItemService;
     private final RestaurantService restaurantService;
 
+    // Constructor injection provides the services used by the controller.
     public MenuItemController(MenuItemService menuItemService, RestaurantService restaurantService) {
         this.menuItemService = menuItemService;
         this.restaurantService = restaurantService;
@@ -348,6 +381,7 @@ public class MenuItemController {
     /** /menu = open to everyone (guests see "sign in to order");
      *  /customer/menu = the same page for a signed-in customer, with working Add-to-cart buttons. */
     @GetMapping({"/menu", "/customer/menu"})
+    // Loads dishes grouped by restaurant and opens the public menu page.
     public String publicMenu(Model model) {
         model.addAttribute("menuByRestaurant", menuItemService.groupByRestaurant());
         return "menu/menu";
@@ -355,6 +389,7 @@ public class MenuItemController {
 
     // ------------------------------------------------------- ADMIN AREA
     @GetMapping("/admin/menu")
+    // Displays the admin menu, applying a restaurant filter or a name search if supplied.
     public String manage(@RequestParam(required = false) String keyword,
                          @RequestParam(required = false) Long restaurantId,
                          Model model) {
@@ -370,6 +405,7 @@ public class MenuItemController {
     }
 
     @GetMapping("/admin/menu/new")
+    // Prepares an empty menu item and restaurant list for the create form.
     public String createForm(Model model) {
         model.addAttribute("menuItem", new MenuItem());
         model.addAttribute("restaurants", restaurantService.findAll());
@@ -378,6 +414,7 @@ public class MenuItemController {
 
     @PostMapping("/admin/menu")
     // Checks the submitted details and saves the new dish to its restaurant.
+    // Validates the submitted dish details, connects the restaurant, and saves the new item.
     public String create(@ModelAttribute("menuItem") MenuItem menuItem,
                          @RequestParam(required = false) Long restaurantId,
                          RedirectAttributes redirectAttributes) {
@@ -397,6 +434,7 @@ public class MenuItemController {
     }
 
     @GetMapping("/admin/menu/{id}/edit")
+    // Loads the selected dish and restaurant options so the admin can edit it.
     public String editForm(@PathVariable Long id, Model model) {
         model.addAttribute("menuItem", menuItemService.findById(id));
         model.addAttribute("restaurants", restaurantService.findAll());
@@ -404,6 +442,7 @@ public class MenuItemController {
     }
 
     @PostMapping("/admin/menu/{id}")
+    // Copies the submitted changes onto the existing item, then saves the updated record.
     public String update(@PathVariable Long id,
                          @ModelAttribute("menuItem") MenuItem menuItem,
                          @RequestParam(required = false) Long restaurantId,
@@ -424,6 +463,7 @@ public class MenuItemController {
     }
 
     @PostMapping("/admin/menu/{id}/delete")
+    // Attempts to delete the dish and shows a message if existing orders prevent deletion.
     public String delete(@PathVariable Long id, RedirectAttributes redirectAttributes) {
         try {
             menuItemService.deleteById(id);
@@ -436,6 +476,7 @@ public class MenuItemController {
     }
 
     @PostMapping("/admin/menu/{id}/toggle")
+    // Changes the dish between available and sold out, then returns to the admin menu.
     public String toggleAvailability(@PathVariable Long id, RedirectAttributes redirectAttributes) {
         menuItemService.toggleAvailability(id);
         redirectAttributes.addFlashAttribute("success", "Availability changed.");
