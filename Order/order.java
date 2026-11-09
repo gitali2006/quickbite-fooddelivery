@@ -308,7 +308,7 @@ public class OrderItem extends BaseEntity {
 
 
 ### `src/main/java/com/example/fooddelivery/model/enums/OrderStatus.java`
-```java
+/*PLACED → CONFIRMED → PREPARING → OUT_FOR_DELIVERY → DELIVERED (or CANCELLED)*/
 package com.example.fooddelivery.model.enums;
 
 /**
